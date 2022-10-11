@@ -1,0 +1,82 @@
+---------------------------READ FILE------------------------------------
+# Read the Example1.txt
+example1 = "Example1.txt"
+file1 = open(example1, "r")
+
+# Read the file
+FileContent = file1.read()
+FileContent
+print(FileContent)
+
+# Close file after finish
+file1.close()
+
+***
+Using the with statement is better practice, it automatically closes the file even if the code encounters an exception. 
+The code will run everything in the indent block then close the file object.
+
+# Open file using with
+with open(example1, "r") as file1:
+    FileContent = file1.read()
+    print(FileContent)
+    
+# Read one line
+with open(example1, "r") as file1:
+    print("first line: " + file1.readline()) #Note readline()
+    
+# Iterate through the lines
+with open(example1,"r") as file1:
+        i = 0;
+        for line in file1:
+            print("Iteration", str(i), ": ", line)
+            i = i + 1
+            
+# Read all lines and save as a list
+with open(example1, "r") as file1:
+    FileasList = file1.readlines()     #Each time readlines() is initiated a new line is read
+  
+---------------------------WRITE FILE------------------------------------
+
+# Write line to file
+exmp2 = 'Example2.txt'
+with open(exmp2, 'w') as writefile:
+    writefile.write("This is line A")
+
+# Sample list of text
+Lines = ["This is line A\n", "This is line B\n", "This is line C\n"]
+Lines
+
+# Write the strings in the list to text file
+with open('Example2.txt', 'w') as writefile:
+    for line in Lines:
+        print(line)
+        writefile.write(line)
+        
+---------------------------APPEND TO A FILE------------------------------------
+
+# Write a new line to text file
+with open('Example2.txt', 'a') as testwritefile:
+    testwritefile.write("This is line C\n")
+    testwritefile.write("This is line D\n")
+    testwritefile.write("This is line E\n")
+    
+It's fairly ineffecient to open the file in a or w and then reopening it in r to read any lines. Luckily we can access the file in the following modes:
+r+ : Reading and writing. Cannot truncate the file.
+w+ : Writing and reading. Truncates the file.
+a+ : Appending and Reading. Creates a new file, if none exists.
+Opening the file in w is akin to opening the .txt file, moving your cursor to the beginning of the text file, writing new text and deleting everything that follows. 
+Whereas opening the file in a is similiar to opening the .txt file, moving your cursor to the very end and then adding the new pieces of text.
+It is often very useful to know where the 'cursor' is in a file and be able to control it. The following methods allow us to do precisely this -
+
+.tell() - returns the current position in bytes
+.seek(offset,from) - changes the position by 'offset' bytes with respect to 'from'. 
+From can take the value of 0,1,2 corresponding to beginning, relative to current position and end
+
+---------------------------COPY A FILE------------------------------------
+
+# Copy file to another
+with open('Example2.txt','r') as readfile:
+    with open('Example3.txt','w') as writefile:
+          for line in readfile:
+                writefile.write(line)
+                
