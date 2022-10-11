@@ -36,7 +36,56 @@ def add(a):
     print(a, "if you add one", b)
     return(b)
     
+def type_of_album(artist, album, year_released):
+    print(artist, album, year_released)
+    if year_released > 1980:
+        return "Modern"
+    else:
+        return "Oldie"
+x = type_of_album("Michael Jackson", "Thriller", 1980)
+print(x)
+
+#COLLECTIONS
+def printAll(*args): # All the arguments are 'packed' into args which can be treated like a tuple
+    print("No of arguments:", len(args)) 
+    for argument in args:
+        print(argument)
+#printAll with 3 arguments
+printAll('Horsefeather','Adonis','Bone')
+#printAll with 4 arguments
+printAll('Sidecar','Long Island','Mudslide','Carriage')
 
 
+****************************************CLASSES, OBJECTS AND METHODS**************************************************
 
+# Import the library
+import matplotlib.pyplot as plt
+%matplotlib inline 
 
+# Create a class Circle
+class Circle(object):
+    
+    # Constructor
+    def __init__(self, radius=3, color='blue'):
+        self.radius = radius
+        self.color = color 
+    
+    # Method
+    def add_radius(self, r):
+        self.radius = self.radius + r
+        return(self.radius)
+    
+    # Method
+    def drawCircle(self):
+        plt.gca().add_patch(plt.Circle((0, 0), radius=self.radius, fc=self.color))
+        plt.axis('scaled')
+        plt.show()
+        
+# Create an object RedCircle
+RedCircle = Circle(10, 'red')
+
+# Find out the methods can be used on the object RedCircle
+dir(RedCircle)
+
+# Call the method drawCircle
+RedCircle.drawCircle()
