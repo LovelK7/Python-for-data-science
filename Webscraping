@@ -1,0 +1,66 @@
+--------------------------------#WEBSCRAPING INTRO
+
+--------------------------------#Installation
+!mamba install bs4==4.10.0 -y
+!pip install lxml==4.6.4
+!mamba install html5lib==1.1 -y
+# !pip install requests==2.26.0
+
+--------------------------------#IMPORT
+from bs4 import BeautifulSoup # this module helps in web scrapping.
+import requests  # this module helps us to download a web page
+
+--------------------------------#DOWNLOADING AND SCRAPING
+
+url = "http://www.ibm.com"
+data  = requests.get(url).text #store the webpage in a text
+soup = BeautifulSoup(data,"html.parser")  # create a soup object using the variable 'data'
+
+#find a html table in the web page
+table = soup.find('table') # in html table is represented by the tag <table>
+
+#Get all rows from the table
+for row in table.find_all('tr'): # in html table row is represented by the tag <tr>
+    # Get all columns in each row.
+    cols = row.find_all('td') # in html a column is represented by the tag <td>
+    color_name = cols[2].string # store the value in column 3 as color_name
+    color_code = cols[3].string # store the value in column 4 as color_code
+    print("{}--->{}".format(color_name,color_code))
+    
+--------------------------------SCRAPE AND PUT DATA INTO PANDAS DATAFRAME
+
+#we have 26 tables in the webpage
+tables = soup.find_all('table') # in html table is represented by the tag <table>
+
+for index,table in enumerate(tables):
+    if ("10 most densely populated countries" in str(table)):
+        table_index = index
+print(table_index)
+
+population_data = pd.DataFrame(columns=["Rank", "Country", "Population", "Area", "Density"])
+
+for row in tables[table_index].tbody.find_all("tr"):
+    col = row.find_all("td")
+    if (col != []):
+        rank = col[0].text
+        country = col[1].text
+        population = col[2].text.strip()
+        area = col[3].text.strip()
+        density = col[4].text.strip()
+        population_data = population_data.append({"Rank":rank, "Country":country, "Population":population, "Area":area, "Density":density}, ignore_index=True)
+
+population_data
+
+--------------------------------SCRAPE AND PUT DATA INTO PANDAS DATAFRAME USING BEAUTIFUL SOUP
+
+pd.read_html(str(tables[5]), flavor='bs4')
+#The function read_html always returns a list of DataFrames so we must pick the one we want out of the list.
+
+population_data_read_html = pd.read_html(str(tables[5]), flavor='bs4')[0]
+
+population_data_read_html
+
+--------------------------------SCRAPE AND PUT DATA INTO PANDAS DATAFRAME USING read-html
+
+dataframe_list = pd.read_html(url, flavor='bs4')
+dataframe_list[5]
